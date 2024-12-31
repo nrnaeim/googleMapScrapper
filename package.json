@@ -1,0 +1,15 @@
+{
+  "name": "googlemapscrapper",
+  "version": "1.0.0",
+  "description": "This project is build to scrape good map public data using Puppeteer, Node JS,",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^23.11.1"
+  }
+}
