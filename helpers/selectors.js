@@ -1,8 +1,8 @@
 /*
  * Title: Selectors
- * Description: All the selectors to bulid the scrapper
+ * Description: All the selectors to bulid the scrapper and navigate the browser
  * Author: Niemur Rahman
- * Date: 31/12/2024
+ * Date: 01/01/2025
  */
 //module scaffolding
 export const selectors = {};
