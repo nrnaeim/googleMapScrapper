@@ -6,9 +6,9 @@
  */
 //module scaffolding
 export const selectors = {};
-selectors.googleUrl = "https://www.google.com";
+selectors.googleUrl = "https://www.google.com/";
 selectors.lang = "#SIvCob > a";
-selectors.googleMapurl = "https://www.google.com/maps/";
+selectors.googleMapurl = "https://www.google.com/maps?hl=en";
 selectors.searchInput = "#searchboxinput";
 selectors.searchResultContainer = `div[role="feed"]`;
 selectors.searchResults =
