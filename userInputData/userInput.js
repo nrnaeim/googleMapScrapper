@@ -5,7 +5,6 @@
  * Date: 01/01/2025
  */
 //dependencies
-
 //module scaffolding
 export const userInput = {};
 userInput.countryCode = "GB";

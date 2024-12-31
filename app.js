@@ -7,17 +7,14 @@
 //dependencies
 import puppeteer from "puppeteer";
 import fs from "fs";
+import lodash from "lodash";
 import { searchInput } from "./helpers/searchInput.js";
 import { selectors } from "./helpers/selectors.js";
-import { cookieData } from "./credentials/cookies.js";
 import { helpers } from "./helpers/helpers.js";
-
 //module scaffolding
-const app = {};
-
+export const app = {};
 //Final data as an array of object
-app.finalOutput = [];
-
+app.collectedData = [];
 //Main function
 app.mainFunction = async () => {
   const browser = await puppeteer.launch({
@@ -32,7 +29,6 @@ app.mainFunction = async () => {
   await page.setExtraHTTPHeaders({ "Accept-Language": "en" });
   const context = browser.defaultBrowserContext();
   await context.overridePermissions(selectors.googleUrl, ["geolocation"]);
-
   //looping through searchInput
   for (let i = 0; i < searchInput.length; i++) {
     //changin geolocation for each search
@@ -48,7 +44,6 @@ app.mainFunction = async () => {
     });
     await page.keyboard.press("Enter");
     await page.waitForNetworkIdle();
-
     //scrolling search result container
     if ((await page.$(selectors.searchResultContainer)) !== null) {
       //Scrolling result
@@ -62,10 +57,17 @@ app.mainFunction = async () => {
         //Data container scrolling
         await helpers.scrolling(page, selectors.dataContainer);
         //Collecting final data for each search result
-        //await helpers.dataCollect(page, finalOutput, searchResult);
+        await helpers.dataCollect(page, app.collectedData, searchResult);
       }
     }
-
+    //filtering uniq data
+    app.uniqData = lodash.uniq(app.collectedData, lodash.isEqual);
+    //writing file for each search results
+    fs.writeFile("./output.json", JSON.stringify(app.uniqData), (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
     //printing working progress
     console.log(`${i + 1} of ${searchInput.length} completed successfully`);
   }
