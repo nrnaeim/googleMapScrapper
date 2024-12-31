@@ -10,7 +10,7 @@ import fs from "fs";
 import { searchInput } from "./helpers/searchInput.js";
 import { selectors } from "./helpers/selectors.js";
 import { cookieData } from "./credentials/cookies.js";
-//import { helpers } from "./helpers/helpers.js";
+import { helpers } from "./helpers/helpers.js";
 
 //module scaffolding
 const app = {};
@@ -48,6 +48,23 @@ app.mainFunction = async () => {
     });
     await page.keyboard.press("Enter");
     await page.waitForNetworkIdle();
+
+    //scrolling search result container
+    if ((await page.$(selectors.searchResultContainer)) !== null) {
+      //Scrolling result
+      await helpers.scrolling(page, selectors.searchResultContainer);
+      //Search results for each keyword and handling them
+      const searchResults = await page.$$(selectors.searchResults);
+      for (let searchResult of searchResults) {
+        await searchResult.click();
+        // Wait for the click action to complete
+        await page.waitForNetworkIdle();
+        //Data container scrolling
+        await helpers.scrolling(page, selectors.dataContainer);
+        //Collecting final data for each search result
+        //await helpers.dataCollect(page, finalOutput, searchResult);
+      }
+    }
 
     //printing working progress
     console.log(`${i + 1} of ${searchInput.length} completed successfully`);
