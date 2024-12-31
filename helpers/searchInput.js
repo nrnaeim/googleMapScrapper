@@ -9,7 +9,7 @@
 import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
-import { userInput } from "./../inputData/userInput.js";
+import { userInput } from "./../userInputData/userInput.js";
 
 //module scaffolding
 export const searchInput = [];
@@ -18,7 +18,7 @@ export const searchInput = [];
 const __filename = fileURLToPath(import.meta.url);
 const geoLocationDirname = path.join(
   path.dirname(__filename),
-  "./../inputData/geolocations.json"
+  "./../userInputData/geolocations.json"
 );
 
 //taking all the locations from geolocations file
