@@ -62,8 +62,10 @@ app.mainFunction = async () => {
     }
     //filtering uniq data
     app.uniqData = lodash.uniqBy(app.collectedData, "name");
+    //clearning reviews
+    const cleanData = helpers.reviewClean(app.uniqData);
     //writing file for each search results
-    fs.writeFile("./output.json", JSON.stringify(app.uniqData), (err) => {
+    fs.writeFile("./output.json", JSON.stringify(cleanData), (err) => {
       if (err) {
         console.log(err);
       }
