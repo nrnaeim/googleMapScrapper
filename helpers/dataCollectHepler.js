@@ -5,8 +5,11 @@
  * Date: 01/01/2025
  */
 //dependencies
+import fs from "fs";
+import dns from "dns/promises";
 import puppeteer from "puppeteer";
 import lodash from "lodash";
+
 //module scaffolding
 export const dataCollectHepler = {};
 //Social media link finding function
@@ -30,47 +33,41 @@ dataCollectHepler.itemCollet = async (page, selector) => {
     return "Not found";
   }
 };
+
+dataCollectHepler.routs = JSON.parse(
+  fs.readFileSync("./helpers/contactRoutes.json", "utf-8")
+);
 //email collecting helper from wensite
 dataCollectHepler.emailCollect = async (website) => {
-  if (website === "Not found") {
-    return "Not found";
-  } else {
-    try {
-      let response = await fetch(`http://www.${website}`);
-      if (response.statusText.toUpperCase() === "OK") {
-        let responseText = await response.text();
+  if (website !== "Not found") {
+    for (let rout of dataCollectHepler.routs) {
+      const response = await fetch(`https://${website}${rout}`);
+      if (response.statusText.toLowerCase() === "ok") {
+        const responseText = await response.text();
         const emailRegex =
           /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|mil|int|biz|info|name|pro|aero|coop|museum|asia|cat|jobs|mobi|tel|travel|app|tech|dev|online|store|xyz|website|space|cloud|guru|solutions|company|services|shop|gov|edu|mil|int|bank|insurance|health|us|uk|ca)/g;
-        let emails = await responseText.match(emailRegex);
-        //Checking email count and returning as string
+        let emails = responseText.match(emailRegex);
         if (emails !== null) {
-          return await lodash.uniq(emails).join(",");
-        } else {
-          return "Not found";
+          const uniqEmails = lodash.uniq(emails);
+          return await dataCollectHepler.emailValidator(uniqEmails);
         }
       }
-    } catch (err) {}
+    }
+  } else {
+    return "Not found";
   }
 };
-//email collecting helper from website
-dataCollectHepler.emailCollect = async (website) => {
-  if (website === "Not found") {
-    return "Not found";
-  } else {
+//emailValidator functiom
+dataCollectHepler.emailValidator = async (emails) => {
+  const validEmail = [];
+  for (let email of emails) {
+    const domain = email.split("@").pop();
     try {
-      let response = await fetch(`http://www.${website}`);
-      if (response.statusText.toUpperCase() === "OK") {
-        let responseText = await response.text();
-        const emailRegex =
-          /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|mil|int|biz|info|name|pro|aero|coop|museum|asia|cat|jobs|mobi|tel|travel|app|tech|dev|online|store|xyz|website|space|cloud|guru|solutions|company|services|shop|gov|edu|mil|int|bank|insurance|health|us|uk|ca)/g;
-        let emails = await responseText.match(emailRegex);
-        //Checking email count and returning as string
-        if (emails !== null) {
-          return await lodash.uniq(emails).join(",");
-        } else {
-          return "Not found";
-        }
+      const addresses = await dns.resolveMx(domain);
+      if (addresses.length > 0) {
+        validEmail.push(email);
       }
     } catch (err) {}
   }
+  return validEmail.join(",");
 };

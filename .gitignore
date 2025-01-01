@@ -2,3 +2,5 @@
 node_modules/
 cookies.js
 geolocations.json
+rough.js
+output.json
