@@ -94,3 +94,18 @@ helpers.dataCollect = async (page, collectedData, searchResult) => {
   // Data pushing to final output array
   collectedData.push(tempObj);
 };
+
+//reviews count cleaning
+helpers.reviewClean = (DATA) => {
+  for (let data of DATA) {
+    const splitedStr = data.reviews.split("");
+    let cleanStr = "";
+    for (let str of splitedStr) {
+      if (str !== "(" && str !== ")") {
+        cleanStr += str;
+      }
+    }
+    data.reviews = cleanStr;
+  }
+  return DATA;
+};
