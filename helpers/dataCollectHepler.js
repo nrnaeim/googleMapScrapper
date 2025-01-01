@@ -41,17 +41,19 @@ dataCollectHepler.routs = JSON.parse(
 dataCollectHepler.emailCollect = async (website) => {
   if (website !== "Not found") {
     for (let rout of dataCollectHepler.routs) {
-      const response = await fetch(`https://${website}${rout}`);
-      if (response.statusText.toLowerCase() === "ok") {
-        const responseText = await response.text();
-        const emailRegex =
-          /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|mil|int|biz|info|name|pro|aero|coop|museum|asia|cat|jobs|mobi|tel|travel|app|tech|dev|online|store|xyz|website|space|cloud|guru|solutions|company|services|shop|gov|edu|mil|int|bank|insurance|health|us|uk|ca)/g;
-        let emails = responseText.match(emailRegex);
-        if (emails !== null) {
-          const uniqEmails = lodash.uniq(emails);
-          return await dataCollectHepler.emailValidator(uniqEmails);
+      try {
+        const response = await fetch(`https://${website}${rout}`);
+        if (response.statusText.toLowerCase() === "ok") {
+          const responseText = await response.text();
+          const emailRegex =
+            /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|mil|int|biz|info|name|pro|aero|coop|museum|asia|cat|jobs|mobi|tel|travel|app|tech|dev|online|store|xyz|website|space|cloud|guru|solutions|company|services|shop|gov|edu|mil|int|bank|insurance|health|us|uk|ca)/g;
+          let emails = responseText.match(emailRegex);
+          if (emails !== null) {
+            const uniqEmails = lodash.uniq(emails);
+            return await dataCollectHepler.emailValidator(uniqEmails);
+          }
         }
-      }
+      } catch (err) {}
     }
   } else {
     return "Not found";
