@@ -58,7 +58,8 @@ helpers.dataCollect = async (page, collectedData, searchResult) => {
   //Collecting website
   tempObj.website = await dataCollectHepler.itemCollet(page, selectors.website);
   //Collecting email
-  tempObj.email = await dataCollectHepler.emailCollect(tempObj.website);
+  tempObj.email =
+    (await dataCollectHepler.emailCollect(tempObj.website)) || "Server issue";
   //Collecting ratting
   tempObj.ratting = await dataCollectHepler.itemCollet(page, selectors.ratting);
   //Collecting  catagory
