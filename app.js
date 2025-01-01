@@ -61,7 +61,7 @@ app.mainFunction = async () => {
       }
     }
     //filtering uniq data
-    app.uniqData = lodash.uniq(app.collectedData, lodash.isEqual);
+    app.uniqData = lodash.uniqBy(app.collectedData, "name");
     //writing file for each search results
     fs.writeFile("./output.json", JSON.stringify(app.uniqData), (err) => {
       if (err) {
